@@ -16,5 +16,5 @@ ENV KC_BOOTSTRAP_ADMIN_USERNAME=admin \
 EXPOSE 8080
 
 # Commande de démarrage de Keycloak
-ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start-dev"]
+ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start-dev", "--http-host=0.0.0.0"]
 
