@@ -1,20 +1,20 @@
-# Utilise l'image OpenJDK
-FROM openjdk:21-jdk-slim
+# Utiliser l'image officielle de Keycloak
+FROM quay.io/keycloak/keycloak:26.0.8
 
-# Répertoire de travail dans le conteneur
-WORKDIR /app
+# Définir les variables d'environnement nécessaires
+ENV KC_HEALTH_ENABLED=true \
+    KC_METRICS_ENABLED=true \
+    KC_FEATURES=preview \
+    KC_HOSTNAME_STRICT=false \
+    KC_DB=dev-file
 
-# Copie tous les fichiers dans le répertoire de travail du conteneur
-COPY . .
+# Ajouter un utilisateur admin au démarrage
+ENV KC_BOOTSTRAP_ADMIN_USERNAME=admin \
+    KC_BOOTSTRAP_ADMIN_PASSWORD=admin
 
-# Rendre le fichier mvnw exécutable
-RUN chmod +x ./mvnw
+# Exposer le port 8080
+EXPOSE 8080
 
-# Compiler l'application sans exécuter les tests
-RUN ./mvnw clean package -DskipTests
+# Commande de démarrage de Keycloak
+ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start-dev"]
 
-# Exposer le port de votre application Spring Boot (remplacez si nécessaire)
-EXPOSE 4099
-
-# Commande pour démarrer l'application
-CMD ["java", "-jar", "target/gestiondesfichiers-0.0.1-SNAPSHOT.jar"]
